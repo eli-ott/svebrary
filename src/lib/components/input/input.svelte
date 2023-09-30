@@ -1,8 +1,11 @@
 <script lang="ts">
+    import type { Colors } from "$lib/types.js";
   import type { InputVariant, InputmodeVariant } from "./types.js";
 
   /** Input's name */
   export let name: string;
+  /** Input's color */
+  export let color: Colors = "primary";
   /** Shown label */
   export let label: string = "Name";
   /** If the input has a background or not */
@@ -34,21 +37,21 @@
   let reduceLabel: boolean = false;
 
   /**
-   * Check if the input has content in it to reduce label
+   * Check if the input has content in it or is focused to reduce label
    *
    * @param {event} Event Event
    */
   const handleInputLength = (event: Event) => {
     const input = event.target as HTMLInputElement;
 
-    input.value.length > 0 ? (reduceLabel = true) : (reduceLabel = false);
+    input.value.length > 0 || input === document.activeElement ? (reduceLabel = true) : (reduceLabel = false);
   };
 </script>
 
 {#if simple}
   <div class="svb-input-container" style="width: {width}">
     <input
-      class="svb-input svb-simple"
+      class="svb-input svb-simple {color}"
       id={name}
       {name}
       {type}
@@ -56,6 +59,7 @@
       aria-placeholder={placeholder}
       class:svb-fill={fill}
       class:svb-filled={reduceLabel}
+      class:color={color}
       {required}
       aria-required={required}
       {minlength}
@@ -67,12 +71,14 @@
       {disabled}
       aria-disabled={disabled}
       on:input={handleInputLength}
+      on:click={() => {reduceLabel = true }}
+      on:blur={handleInputLength}
     />
   </div>
 {:else}
   <div class="svb-input-container" style="width: {width}">
     <input
-      class="svb-input svb-complex"
+      class="svb-input svb-complex {color}"
       id={name}
       {name}
       {type}
@@ -91,13 +97,16 @@
       {disabled}
       aria-disabled={disabled}
       on:input={handleInputLength}
+      on:click={() => {reduceLabel = true }}
+      on:blur={handleInputLength}
     />
     <label for={name}>{label}</label>
   </div>
 {/if}
 
 <style lang="scss">
-  @import "../../../variables.scss";
+  @import "../../style/mainVar.scss";
+  @import "./inputVar.scss";
 
   .svb-input-container {
     position: relative;
@@ -115,7 +124,17 @@
       transform-origin: left;
       transform: scaleX(0);
 
-      background: var(--accent, $accent);
+      background-color: #111111;
+    }
+
+    &:has(> .svb-input.primary)::after {
+      background-color: var(--primary, $primary);
+    }
+    &:has(> .svb-input.caution)::after {
+      background-color: var(--caution, $caution);
+    }
+    &:has(> .svb-input.warn)::after {
+      background-color: var(--warn, $warn);
     }
 
     &:has(> .svb-input:focus)::after {
@@ -128,8 +147,8 @@
       font-family: var(--font, $font);
       font-size: vazr(--font-size, $font-size);
 
-      left: var(--input-padding, $input-padding);
-      bottom: var(--input-padding, $input-padding);
+      left: var(--left-input-padding, $left-input-padding);
+      bottom: var(--bottom-input-padding, $bottom-input-padding);
 
       transition: all 0.15s;
     }
@@ -142,19 +161,17 @@
       font-family: va(--font, $font);
 
       height: 100%;
-      width: calc(100% - var(--input-padding, $input-padding) * 2);
+      width: calc(100% - var(--right-input-padding, $right-input-padding) * 2);
 
       color: var(--color, $color);
 
       border-bottom: 2px var(--border-color, $border-color) solid;
 
-      padding: var(--input-padding, calc($input-padding * 2))
-        var(--input-padding, $input-padding)
-        var(--input-padding, calc($input-padding / 2))
-        var(--input-padding, $input-padding);
+      padding: var(--top-input-padding, calc($top-input-padding)) var(--right-input-padding, $right-input-padding)
+        var(--bottom-input-padding, calc($bottom-input-padding / 2)) var(--left-input-padding, $left-input-padding);
 
       &.svb-fill {
-        background-color: var(--background, $background);
+        background-color: var(--fill-color, $fill-color);
       }
 
       &.svb-complex {
@@ -163,17 +180,21 @@
         }
       }
 
-      &:focus ~ label {
-        bottom: 60%;
-
-        font-size: 10px;
-
-        color: var(--accent, $accent);
-      }
       &.svb-filled ~ label {
         bottom: 60%;
 
         font-size: 10px;
+
+        color: #111111;
+      }
+      &:focus.primary ~ label {
+        color: var(--primary, $primary);
+      }
+      &:focus.caution ~ label {
+        color: var(--caution, $caution);
+      }
+      &:focus.warn ~ label {
+        color: var(--warn, $warn);
       }
     }
   }
