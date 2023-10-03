@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { Input } from "$lib/components/input";
   import { Button } from "$lib/components/button";
 </script>
 
-<Input name="prenom" label="Prénom" placeholder="Your name" fill={true} />
-
-<Button name="btn">
+<Button name="btn" color="basic">
   <span>Submit</span>
 </Button>

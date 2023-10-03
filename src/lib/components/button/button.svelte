@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { Colors } from "$lib/types.js";
   import type { ButtonVariant, HoverVariant, FocusVariant, TypeVariant, FormtargetVariant } from "./types.ts";
 
   /** Button type */
@@ -17,9 +18,11 @@
   export let hover: HoverVariant = "invert";
   /** Button focus style */
   export let focus: FocusVariant = "brighten";
+  /** Button's color */
+  export let color: Colors = "primary";
 </script>
 
-<button {disabled} aria-disabled={disabled} {name} {type} {value} {formtarget} class="svb-{style} svb-hover-{hover} svb-focus-{focus}">
+<button {disabled} aria-disabled={disabled} {name} {type} {value} {formtarget} class="svb-{style} svb-hover-{hover} svb-focus-{focus} {color}">
   <slot />
 </button>
 
@@ -34,5 +37,22 @@
     padding: var(--vertical-button-padding, $vertical-button-padding) var(--horizontal-button-padding, $horizontal-button-padding);
 
     border-radius: var(--button-radius, $button-radius);
+
+    color: #ffffff;
+    border: solid 1px var(--border-color, $border-color);
+
+    &.primary {
+      background-color: var(--primary, $primary);
+    }
+    &.warn {
+      background-color: var(--warn, $warn);
+    }
+    &.caution {
+      background-color: var(--caution, $caution);
+    }
+    &.basic {
+      background-color: var(--fill-color, $fill-color);
+      color: var(--color, $color);
+    }
   }
 </style>
