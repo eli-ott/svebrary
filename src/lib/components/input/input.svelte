@@ -127,6 +127,7 @@
       background-color: #111111;
     }
 
+    // All input's colors
     &:has(> .svb-input.primary)::after {
       background-color: var(--primary, $primary);
     }
@@ -187,6 +188,8 @@
 
         color: #111111;
       }
+
+      // Different colors for label
       &:focus.primary ~ label {
         color: var(--primary, $primary);
       }
